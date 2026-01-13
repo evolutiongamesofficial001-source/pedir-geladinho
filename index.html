@@ -6,294 +6,262 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-    --roxo: #12001a;
-    --roxo-card: #240033;
-    --amarelo: #ffe600;
-    --ciano: #00ffd5;
+:root{
+ --roxo:#12001a;
+ --roxo-card:#240033;
+ --amarelo:#ffe600;
+ --ciano:#00ffd5;
 }
-
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    font-family: system-ui, Arial, sans-serif;
-    background: radial-gradient(circle at top, #3a005f, #0a0010);
-    color: #fff;
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,system-ui;
+ background:radial-gradient(circle at top,#3a005f,#0a0010);
+ color:#fff;
 }
-
-.hero {
-    text-align: center;
-    padding: 28px 15px;
+.hero{text-align:center;padding:25px}
+.hero h1{margin:0;color:var(--amarelo)}
+.app{max-width:480px;margin:auto;padding:15px}
+.card{
+ background:var(--roxo-card);
+ padding:14px;
+ border-radius:16px;
+ margin-top:14px;
 }
-
-.hero h1 {
-    margin: 0;
-    color: var(--amarelo);
-    letter-spacing: 2px;
-    text-shadow: 0 0 18px rgba(255,230,0,.7);
+input,textarea,select{
+ width:100%;
+ margin-top:6px;
+ padding:12px;
+ border-radius:10px;
+ border:none;
+ background:#000;
+ color:var(--amarelo);
 }
-
-.app {
-    max-width: 480px;
-    margin: auto;
-    padding: 15px;
+.grid-produtos{display:grid;gap:12px}
+.produto{
+ background:linear-gradient(135deg,#2a0040,#160021);
+ padding:14px;
+ border-radius:16px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
 }
-
-.grid-produtos {
-    display: grid;
-    gap: 12px;
+.produto input{
+ width:70px;
+ padding:10px;
+ border-radius:10px;
+ background:#000;
+ color:var(--ciano);
+ border:none;
+ text-align:center;
 }
-
-.produto {
-    background: linear-gradient(135deg, #2a0040, #160021);
-    border-radius: 16px;
-    padding: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.pix-box{
+ background:#000;
+ padding:12px;
+ border-radius:12px;
+ margin-top:10px;
+ text-align:center;
+ color:var(--ciano);
 }
-
-.produto-info strong {
-    font-size: 14px;
+.copy-btn{
+ width:100%;
+ margin-top:8px;
+ padding:10px;
+ border:none;
+ border-radius:10px;
+ font-weight:bold;
+ background:linear-gradient(90deg,#00ffd5,#00bfa5);
+ cursor:pointer;
 }
-
-.produto-info span {
-    font-size: 13px;
-    color: var(--amarelo);
+.btn-neon{
+ width:100%;
+ margin-top:18px;
+ padding:16px;
+ border-radius:18px;
+ border:none;
+ font-size:16px;
+ font-weight:bold;
+ background:linear-gradient(90deg,#ffe600,#ffb800);
+ color:#1a0026;
 }
-
-.produto input {
-    width: 72px;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    background: #000;
-    color: var(--ciano);
-    font-size: 18px;
-    text-align: center;
-}
-
-.card {
-    margin-top: 15px;
-    background: var(--roxo-card);
-    padding: 14px;
-    border-radius: 16px;
-}
-
-input, textarea, select {
-    width: 100%;
-    margin-top: 6px;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    background: #000;
-    color: var(--amarelo);
-    outline: none;
-}
-
-.resumo .linha {
-    display: flex;
-    justify-content: space-between;
-    font-size: 20px;
-}
-
-#desconto { color: var(--ciano); }
-
-.btn-neon {
-    width: 100%;
-    margin-top: 18px;
-    padding: 16px;
-    border-radius: 18px;
-    border: none;
-    font-size: 17px;
-    font-weight: bold;
-    background: linear-gradient(90deg, #ffe600, #ffb800);
-    color: #1a0026;
-    box-shadow: 0 0 30px rgba(255,230,0,.6);
-}
-
-.status {
-    text-align: center;
-    margin-top: 12px;
-}
-
-/* MOBILE */
-@media (max-width: 420px) {
-    .produto {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-
-    .produto input {
-        width: 100%;
-        font-size: 20px;
-    }
-
-    .hero h1 {
-        font-size: 22px;
-    }
-}
+.hidden{display:none}
+.status{text-align:center;margin-top:12px}
 </style>
 </head>
 
 <body>
 
 <header class="hero">
-    <h1>🍧 GOURMET DO GELADO</h1>
-    <p>Geladinhos artesanais</p>
+ <h1>🍧 GOURMET DO GELADO</h1>
+ <p>Geladinhos artesanais</p>
 </header>
 
 <main class="app">
 
-    <section class="card">
-        <label>👤 Seu nome</label>
-        <input id="nome" type="text" placeholder="Digite seu nome">
-    </section>
+<div class="card">
+ <label>👤 Seu nome</label>
+ <input id="nome">
+</div>
 
-    <section id="lista" class="grid-produtos"></section>
+<div id="lista" class="grid-produtos"></div>
 
-    <section class="card">
-        <label>📍 Local de entrega</label>
-        <textarea id="endereco" placeholder="Rua, número, bairro, referência"></textarea>
-    </section>
+<div class="card">
+ <label>📍 Endereço</label>
+ <textarea id="endereco"></textarea>
+</div>
 
-    <section class="card">
-        <label>💳 Forma de pagamento</label>
-        <select id="pagamento">
-            <option>Pix</option>
-            <option>Dinheiro</option>
-            <option>Cartão</option>
-        </select>
-    </section>
+<div class="card">
+ <label>📅 Data de entrega (opcional)</label>
+ <input type="date" id="dataEntrega">
+</div>
 
-    <section class="card resumo">
-        <div class="linha">
-            <span>Total</span>
-            <strong>R$ <span id="total">0,00</span></strong>
-        </div>
-        <small id="desconto"></small>
-    </section>
+<div class="card">
+ <label>💳 Forma de pagamento</label>
+ <select id="pagamento">
+  <option selected>Pix</option>
+  <option>Dinheiro</option>
+  <option>Cartão</option>
+ </select>
 
-    <button class="btn-neon" onclick="finalizarPedido()">
-        🚀 ENVIAR PEDIDO
-    </button>
+ <label style="margin-top:10px">⏰ Quando pagar?</label>
+ <select id="quandoPix">
+  <option selected>Pagar na entrega</option>
+  <option>Pagar agora</option>
+ </select>
 
-    <div id="status" class="status"></div>
+ <div id="pixBox" class="pix-box hidden">
+  🔑 Chave Pix<br>
+  <strong>34 996329990</strong>
+  <button class="copy-btn" onclick="copiarPix()">📋 Copiar chave Pix</button>
+ </div>
+</div>
+
+<div class="card">
+ <strong>Total: R$ <span id="total">0,00</span></strong>
+ <div id="desconto"></div>
+</div>
+
+<button class="btn-neon" onclick="finalizarPedido()">🚀 ENVIAR PEDIDO</button>
+<div id="status" class="status"></div>
 
 </main>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-
 const firebaseURL =
 "https://gelado-pedido-default-rtdb.firebaseio.com/pedidos.json";
 
-const produtos = [
-    { nome: "Leite Ninho com Nutella", preco: 6 },
-    { nome: "Mousse de Morango", preco: 6 },
-    { nome: "Mousse de Maracujá", preco: 6 },
-    { nome: "Mousse de Coco", preco: 6 },
-    { nome: "Mousse de Limão", preco: 6 },
-    { nome: "Mousse de Paçoca", preco: 6 },
-    { nome: "Ninho com Morango", preco: 6 },
-    { nome: "Céu Azul", preco: 6 },
-    { nome: "Mousse de Abacaxi", preco: 6 },
-    { nome: "Pudim", preco: 7 },
-    { nome: "Napolitano", preco: 7 }
-];
-
+/* ELEMENTOS */
+const nomeEl = document.getElementById("nome");
+const enderecoEl = document.getElementById("endereco");
+const dataEntregaEl = document.getElementById("dataEntrega");
+const pagamentoEl = document.getElementById("pagamento");
+const quandoPixEl = document.getElementById("quandoPix");
+const pixBox = document.getElementById("pixBox");
 const lista = document.getElementById("lista");
-const totalSpan = document.getElementById("total");
+const totalEl = document.getElementById("total");
 const descontoEl = document.getElementById("desconto");
 const statusEl = document.getElementById("status");
-const enderecoEl = document.getElementById("endereco");
-const pagamentoEl = document.getElementById("pagamento");
-const nomeEl = document.getElementById("nome");
 
-/* CRIA PRODUTOS */
-produtos.forEach((p, i) => {
-    const div = document.createElement("div");
-    div.className = "produto";
-    div.innerHTML = `
-        <div class="produto-info">
-            <strong>${p.nome}</strong>
-            <span>R$ ${p.preco},00</span>
-        </div>
-        <input type="number" min="0" max="50" value="0" data-index="${i}">
-    `;
-    lista.appendChild(div);
+/* PRODUTOS */
+const produtos=[
+ {nome:"Leite Ninho com Nutella",preco:6},
+ {nome:"Mousse de Morango",preco:6},
+ {nome:"Mousse de Maracujá",preco:6},
+ {nome:"Mousse de Coco",preco:6},
+ {nome:"Mousse de Limão",preco:6},
+ {nome:"Mousse de Paçoca",preco:6},
+ {nome:"Ninho com Morango",preco:6},
+ {nome:"Céu Azul",preco:6},
+ {nome:"Mousse de Abacaxi",preco:6},
+ {nome:"Pudim",preco:7},
+ {nome:"Napolitano",preco:7}
+];
+
+/* LISTA */
+produtos.forEach((p,i)=>{
+ lista.innerHTML+=`
+ <div class="produto">
+  <div>
+   <strong>${p.nome}</strong><br>
+   R$ ${p.preco},00
+  </div>
+  <input type="number" min="0" value="0" data-i="${i}">
+ </div>`;
 });
 
-lista.addEventListener("input", atualizarTotal);
+lista.addEventListener("input",calcular);
+quandoPixEl.addEventListener("change",()=>{
+ pixBox.classList.toggle("hidden",quandoPixEl.value!=="Pagar agora");
+});
 
-function atualizarTotal() {
-    let total = 0;
-    let qtdTotal = 0;
-
-    document.querySelectorAll("input[type='number']").forEach(input => {
-        const qtd = Number(input.value) || 0;
-        qtdTotal += qtd;
-        total += qtd * produtos[input.dataset.index].preco;
-    });
-
-    let desconto = Math.min(Math.floor(qtdTotal / 6) * 0.05, 0.15);
-    totalSpan.textContent =
-        (total - total * desconto).toFixed(2).replace(".", ",");
-
-    descontoEl.textContent = desconto
-        ? `⚡ Desconto aplicado: ${desconto * 100}%`
-        : "";
+function calcular(){
+ let total=0,qtd=0;
+ document.querySelectorAll("input[type=number]").forEach(i=>{
+  let q=+i.value||0;
+  qtd+=q;
+  total+=q*produtos[i.dataset.i].preco;
+ });
+ let desc=Math.min(Math.floor(qtd/6)*0.05,0.15);
+ totalEl.textContent=(total-total*desc).toFixed(2).replace(".",",");
+ descontoEl.textContent=desc?`Desconto ${desc*100}% aplicado`:"";
 }
 
-window.finalizarPedido = function () {
-    if (!nomeEl.value.trim() || !enderecoEl.value.trim()) {
-        alert("Preencha nome e endereço");
-        return;
-    }
+function copiarPix(){
+ navigator.clipboard.writeText("34996329990");
+ alert("Chave Pix copiada!");
+}
 
-    let itens = [];
-    let total = 0;
-    let qtdTotal = 0;
+function finalizarPedido(){
+ if(!nomeEl.value || !enderecoEl.value){
+  alert("Preencha nome e endereço");
+  return;
+ }
 
-    document.querySelectorAll("input[type='number']").forEach(input => {
-        const qtd = Number(input.value) || 0;
-        if (qtd > 0) {
-            const p = produtos[input.dataset.index];
-            itens.push(`${p.nome} (${qtd})`);
-            total += qtd * p.preco;
-            qtdTotal += qtd;
-        }
-    });
+ let itens=[],total=0,qtd=0;
+ document.querySelectorAll("input[type=number]").forEach(i=>{
+  let q=+i.value||0;
+  if(q>0){
+   const p=produtos[i.dataset.i];
+   itens.push(`${p.nome} (${q})`);
+   total+=q*p.preco;
+   qtd+=q;
+  }
+ });
 
-    if (!itens.length) {
-        alert("Selecione ao menos um geladinho");
-        return;
-    }
+ if(!itens.length){
+  alert("Selecione ao menos um item");
+  return;
+ }
 
-    let desconto = Math.min(Math.floor(qtdTotal / 6) * 0.05, 0.15);
-    let totalFinal = total - total * desconto;
+ let desc=Math.min(Math.floor(qtd/6)*0.05,0.15);
+ let totalFinal=(total-total*desc).toFixed(2);
 
-    statusEl.textContent = "⏳ Enviando pedido...";
+ let pagamentoFinal =
+  pagamentoEl.value==="Pix"
+  ? `Pix - ${quandoPixEl.value}`
+  : pagamentoEl.value;
 
-    fetch(firebaseURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            cliente: nomeEl.value,
-            itens: itens.join(", "),
-            endereco: enderecoEl.value,
-            pagamento: pagamentoEl.value,
-            totalFinal: totalFinal.toFixed(2),
-            data: new Date().toISOString()
-        })
-    })
-    .then(() => statusEl.textContent = "✅ Pedido enviado com sucesso!")
-    .catch(() => statusEl.textContent = "❌ Erro ao enviar pedido");
-};
+ statusEl.textContent="⏳ Enviando pedido...";
 
-});
+ fetch(firebaseURL,{
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({
+   cliente:nomeEl.value,
+   data:new Date().toISOString(),
+   endereco:enderecoEl.value,
+   itens:itens.join(", "),
+   pagamento:pagamentoFinal,
+   pixStatus:pagamentoFinal.includes("Pagar agora")
+    ?"Aguardando confirmação"
+    :"Pagamento na entrega",
+   dataEntrega:dataEntregaEl.value||"Não definida",
+   totalFinal:totalFinal
+  })
+ }).then(()=>{
+  statusEl.textContent="✅ Pedido enviado com sucesso!";
+ });
+}
 </script>
 
 </body>
