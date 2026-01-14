@@ -85,6 +85,7 @@ input,textarea,select{
  color:#1a0026;
 }
 .hidden{display:none}
+.resumo div{margin-top:6px}
 .status{text-align:center;margin-top:12px}
 </style>
 </head>
@@ -111,34 +112,32 @@ input,textarea,select{
 </div>
 
 <div class="card">
- <label>📅 Data de entrega (opcional)</label>
- <input type="date" id="dataEntrega">
-</div>
-
-<div class="card">
  <label>💳 Forma de pagamento</label>
  <select id="pagamento">
-  <option selected>Pix</option>
-  <option>Dinheiro</option>
+  <option selected>Dinheiro</option>
+  <option>Pix</option>
   <option>Cartão</option>
  </select>
 
- <label style="margin-top:10px">⏰ Quando pagar?</label>
- <select id="quandoPix">
-  <option selected>Pagar na entrega</option>
-  <option>Pagar agora</option>
- </select>
+ <div id="pixOpcoes" class="hidden">
+  <label style="margin-top:10px">⏰ Quando pagar?</label>
+  <select id="quandoPix">
+   <option>Pagar na entrega</option>
+   <option>Pagar agora</option>
+  </select>
 
- <div id="pixBox" class="pix-box hidden">
-  🔑 Chave Pix<br>
-  <strong>34 996329990</strong>
-  <button class="copy-btn" onclick="copiarPix()">📋 Copiar chave Pix</button>
+  <div id="pixBox" class="pix-box hidden">
+   🔑 Chave Pix<br>
+   <strong>34 996329990</strong>
+   <button class="copy-btn" onclick="copiarPix()">📋 Copiar chave Pix</button>
+  </div>
  </div>
 </div>
 
-<div class="card">
- <strong>Total: R$ <span id="total">0,00</span></strong>
- <div id="desconto"></div>
+<div class="card resumo">
+ <div>Subtotal: R$ <span id="subtotal">0,00</span></div>
+ <div>Entrega: R$ <span id="entrega">0,00</span></div>
+ <strong>Total final: R$ <span id="total">0,00</span></strong>
 </div>
 
 <button class="btn-neon" onclick="finalizarPedido()">🚀 ENVIAR PEDIDO</button>
@@ -147,23 +146,21 @@ input,textarea,select{
 </main>
 
 <script>
-const firebaseURL =
-"https://gelado-pedido-default-rtdb.firebaseio.com/pedidos.json";
-
 /* ELEMENTOS */
+const lista = document.getElementById("lista");
+const subtotalEl = document.getElementById("subtotal");
+const entregaEl = document.getElementById("entrega");
+const totalEl = document.getElementById("total");
 const nomeEl = document.getElementById("nome");
 const enderecoEl = document.getElementById("endereco");
-const dataEntregaEl = document.getElementById("dataEntrega");
 const pagamentoEl = document.getElementById("pagamento");
 const quandoPixEl = document.getElementById("quandoPix");
+const pixOpcoes = document.getElementById("pixOpcoes");
 const pixBox = document.getElementById("pixBox");
-const lista = document.getElementById("lista");
-const totalEl = document.getElementById("total");
-const descontoEl = document.getElementById("desconto");
 const statusEl = document.getElementById("status");
 
 /* PRODUTOS */
-const produtos=[
+const produtos = [
  {nome:"Leite Ninho com Nutella",preco:6},
  {nome:"Mousse de Morango",preco:6},
  {nome:"Mousse de Maracujá",preco:6},
@@ -173,13 +170,14 @@ const produtos=[
  {nome:"Ninho com Morango",preco:6},
  {nome:"Céu Azul",preco:6},
  {nome:"Mousse de Abacaxi",preco:6},
+ {nome:"Laranjinha",preco:6},
  {nome:"Pudim",preco:7},
  {nome:"Napolitano",preco:7}
 ];
 
-/* LISTA */
+/* LISTAR PRODUTOS */
 produtos.forEach((p,i)=>{
- lista.innerHTML+=`
+ lista.innerHTML += `
  <div class="produto">
   <div>
    <strong>${p.nome}</strong><br>
@@ -189,79 +187,60 @@ produtos.forEach((p,i)=>{
  </div>`;
 });
 
-lista.addEventListener("input",calcular);
-quandoPixEl.addEventListener("change",()=>{
- pixBox.classList.toggle("hidden",quandoPixEl.value!=="Pagar agora");
+lista.addEventListener("input", calcular);
+
+/* PAGAMENTO */
+pagamentoEl.addEventListener("change",()=>{
+ pixOpcoes.classList.toggle("hidden", pagamentoEl.value !== "Pix");
+ pixBox.classList.add("hidden");
 });
 
+quandoPixEl.addEventListener("change",()=>{
+ pixBox.classList.toggle("hidden", quandoPixEl.value !== "Pagar agora");
+});
+
+/* CALCULAR */
 function calcular(){
- let total=0,qtd=0;
- document.querySelectorAll("input[type=number]").forEach(i=>{
-  let q=+i.value||0;
-  qtd+=q;
-  total+=q*produtos[i.dataset.i].preco;
+ let subtotal = 0;
+ let totalItens = 0;
+
+ document.querySelectorAll("input[type=number]").forEach(input=>{
+  const q = Number(input.value) || 0;
+  const p = produtos[input.dataset.i];
+  subtotal += q * p.preco;
+  totalItens += q;
  });
- let desc=Math.min(Math.floor(qtd/6)*0.05,0.15);
- totalEl.textContent=(total-total*desc).toFixed(2).replace(".",",");
- descontoEl.textContent=desc?`Desconto ${desc*100}% aplicado`:"";
+
+ const entrega = totalItens === 0 ? 0 : 3 + (totalItens - 1) * 0.5;
+
+ subtotalEl.textContent = subtotal.toFixed(2).replace(".",",");
+ entregaEl.textContent = entrega.toFixed(2).replace(".",",");
+ totalEl.textContent = (subtotal + entrega).toFixed(2).replace(".",",");
 }
 
+/* PIX */
 function copiarPix(){
  navigator.clipboard.writeText("34996329990");
  alert("Chave Pix copiada!");
 }
 
+/* FINALIZAR */
 function finalizarPedido(){
  if(!nomeEl.value || !enderecoEl.value){
   alert("Preencha nome e endereço");
   return;
  }
 
- let itens=[],total=0,qtd=0;
- document.querySelectorAll("input[type=number]").forEach(i=>{
-  let q=+i.value||0;
-  if(q>0){
-   const p=produtos[i.dataset.i];
-   itens.push(`${p.nome} (${q})`);
-   total+=q*p.preco;
-   qtd+=q;
-  }
- });
-
- if(!itens.length){
-  alert("Selecione ao menos um item");
-  return;
- }
-
- let desc=Math.min(Math.floor(qtd/6)*0.05,0.15);
- let totalFinal=(total-total*desc).toFixed(2);
-
  let pagamentoFinal =
-  pagamentoEl.value==="Pix"
-  ? `Pix - ${quandoPixEl.value}`
-  : pagamentoEl.value;
+  pagamentoEl.value === "Pix"
+   ? `Pix - ${quandoPixEl.value}`
+   : pagamentoEl.value;
 
- statusEl.textContent="⏳ Enviando pedido...";
-
- fetch(firebaseURL,{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({
-   cliente:nomeEl.value,
-   data:new Date().toISOString(),
-   endereco:enderecoEl.value,
-   itens:itens.join(", "),
-   pagamento:pagamentoFinal,
-   pixStatus:pagamentoFinal.includes("Pagar agora")
-    ?"Aguardando confirmação"
-    :"Pagamento na entrega",
-   dataEntrega:dataEntregaEl.value||"Não definida",
-   totalFinal:totalFinal
-  })
- }).then(()=>{
-  statusEl.textContent="✅ Pedido enviado com sucesso!";
- });
+ statusEl.textContent =
+  `✅ Pedido enviado! Forma de pagamento: ${pagamentoFinal}`;
 }
+
+calcular();
 </script>
 
 </body>
